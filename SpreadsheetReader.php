@@ -230,7 +230,7 @@
 		 * Rewind the Iterator to the first element.
 		 * Similar to the reset() function for arrays in PHP
 		 */ 
-		public function rewind()
+		public function rewind(): void
 		{
 			$this -> Index = 0;
 			if ($this -> Handle)
@@ -245,7 +245,7 @@
 		 *
 		 * @return mixed current element from the collection
 		 */
-		public function current()
+		public function current(): mixed
 		{
 			if ($this -> Handle)
 			{
@@ -258,6 +258,7 @@
 		 * Move forward to next element. 
 		 * Similar to the next() function for arrays in PHP 
 		 */ 
+		#[\ReturnTypeWillChange]
 		public function next()
 		{
 			if ($this -> Handle)
@@ -275,7 +276,7 @@
 		 *
 		 * @return mixed either an integer or a string
 		 */ 
-		public function key()
+		public function key(): mixed
 		{
 			if ($this -> Handle)
 			{
@@ -290,7 +291,7 @@
 		 *
 		 * @return boolean FALSE if there's nothing more to iterate over
 		 */ 
-		public function valid()
+		public function valid(): bool
 		{
 			if ($this -> Handle)
 			{
@@ -300,7 +301,7 @@
 		}
 
 		// !Countable interface method
-		public function count()
+		public function count():int
 		{
 			if ($this -> Handle)
 			{
@@ -313,9 +314,9 @@
 		 * Method for SeekableIterator interface. Takes a posiiton and traverses the file to that position
 		 * The value can be retrieved with a `current()` call afterwards.
 		 *
-		 * @param int Position in file
+		 * @param int offset in file
 		 */
-		public function seek($Position)
+		public function seek(int $offset): void
 		{
 			if (!$this -> Handle)
 			{
@@ -324,25 +325,23 @@
 
 			$CurrentIndex = $this -> Handle -> key();
 
-			if ($CurrentIndex != $Position)
+			if ($CurrentIndex != $offset)
 			{
-				if ($Position < $CurrentIndex || is_null($CurrentIndex) || $Position == 0)
+				if ($offset < $CurrentIndex || is_null($CurrentIndex) || $offset == 0)
 				{
 					$this -> rewind();
 				}
 
-				while ($this -> Handle -> valid() && ($Position > $this -> Handle -> key()))
+				while ($this -> Handle -> valid() && ($offset > $this -> Handle -> key()))
 				{
 					$this -> Handle -> next();
 				}
 
 				if (!$this -> Handle -> valid())
 				{
-					throw new OutOfBoundsException('SpreadsheetError: Position '.$Position.' not found');
+					throw new OutOfBoundsException('SpreadsheetError: Position '.$offset.' not found');
 				}
 			}
-
-			return null;
 		}
 	}
 ?>

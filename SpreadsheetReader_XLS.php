@@ -56,7 +56,7 @@
 		 * @param string Path to file
 		 * @param array Options
 		 */
-		public function __construct($Filepath, array $Options = null)
+		public function __construct($Filepath, ?array $Options = null)
 		{
 			if (!is_readable($Filepath))
 			{
@@ -165,7 +165,7 @@
 		 * Rewind the Iterator to the first element.
 		 * Similar to the reset() function for arrays in PHP
 		 */ 
-		public function rewind()
+		public function rewind() : void
 		{
 			$this -> Index = 0;
 		}
@@ -176,7 +176,7 @@
 		 *
 		 * @return mixed current element from the collection
 		 */
-		public function current()
+		public function current() : mixed
 		{
 			if ($this -> Index == 0)
 			{
@@ -190,6 +190,7 @@
 		 * Move forward to next element. 
 		 * Similar to the next() function for arrays in PHP 
 		 */ 
+		#[\ReturnTypeWillChange]
 		public function next()
 		{
 			// Internal counter is advanced here instead of the if statement
@@ -228,7 +229,7 @@
 		 *
 		 * @return mixed either an integer or a string
 		 */ 
-		public function key()
+		public function key() : mixed
 		{
 			return $this -> Index;
 		}
@@ -239,7 +240,7 @@
 		 *
 		 * @return boolean FALSE if there's nothing more to iterate over
 		 */ 
-		public function valid()
+		public function valid() : bool
 		{
 			if ($this -> Error)
 			{
@@ -253,7 +254,7 @@
 		 * Ostensibly should return the count of the contained items but this just returns the number
 		 * of rows read so far. It's not really correct but at least coherent.
 		 */
-		public function count()
+		public function count() : int 
 		{
 			if ($this -> Error)
 			{

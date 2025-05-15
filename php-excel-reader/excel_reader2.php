@@ -99,6 +99,18 @@ function v($data, $pos)
 class OLERead
 {
     public $data = '';
+    public $numBigBlockDepotBlocks;
+    public $sbdStartBlock;
+    public $rootStartBlock;
+    public $extensionBlock;
+    public $numExtensionBlocks;
+    public $bigBlockChain;
+    public $smallBlockChain;
+    public $entry;
+    public $props;
+    public $rootentry;
+    public $wrkbook;
+    
     public function __construct()
     {
     }
@@ -328,6 +340,10 @@ class Spreadsheet_Excel_Reader
     public $colindexes = array();
     public $standardColWidth = 0;
     public $defaultColWidth = 0;
+    public $store_extended_info;
+    public $version;
+    public $nineteenFour;
+    public $sn;
 
     public function myHex($d)
     {
@@ -609,10 +625,10 @@ class Spreadsheet_Excel_Reader
         }
         return null;
     }
-    public function fontProperty($row, $col, $sheet = 0, $prop)
+    public function fontProperty($row, $col, $sheet = 0, $prop = null)
     {
         $font = $this->fontRecord($row, $col, $sheet);
-        if ($font!=null) {
+        if ($font!=null && $prop != null) {
             return $font[$prop];
         }
         return false;
@@ -747,6 +763,7 @@ class Spreadsheet_Excel_Reader
     public $_columnsFormat = array();
     public $_rowoffset = 1;
     public $_coloffset = 1;
+    public $_encoderFunction;
 
     /**
      * List of default date formats used by Excel
@@ -1001,7 +1018,7 @@ class Spreadsheet_Excel_Reader
             $this->setOutputEncoding($outputEncoding);
         }
         for ($i=1; $i<245; $i++) {
-            $name = strtolower(((($i-1)/26>=1)?chr(($i-1)/26+64):'') . chr(($i-1)%26+65));
+            $name = strtolower((string)((($i-1)/26>=1)?chr( (int)(($i-1)/26) +64):'') . (string)chr(($i-1)%26+65));
             $this->colnames[$name] = $i;
             $this->colindexes[$i] = $name;
         }
